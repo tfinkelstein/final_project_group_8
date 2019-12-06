@@ -1,0 +1,97 @@
+---
+title: "Final_project"
+author: "Naomi Giancola"
+date: "11/25/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(gapminder)
+
+library(readr)
+CausesOfDeath_France_2001_2008 <- read_csv("CausesOfDeath_France_2001-2008.csv", 
+    col_types = cols(Value = col_character()))
+
+library(readr)
+MH_12 <- read_csv("MH_12.csv", col_types = cols(`Age-standardized suicide rates (per 100 000 population)` = col_number(), 
+    `Age-standardized suicide rates (per 100 000 population)_1` = col_number(), 
+    `Age-standardized suicide rates (per 100 000 population)_2` = col_number(), 
+    `Age-standardized suicide rates (per 100 000 population)_3` = col_number()))
+```
+
+```{r}
+## France Deaths
+france_deaths<-CausesOfDeath_France_2001_2008 %>% 
+ mutate(Value =str_replace_all(Value, " ", "")) %>% 
+  mutate(Value = as.numeric(Value)) %>% 
+  filter(ICD10!= "All causes of death (A00-Y89) excluding S00-T98")
+
+assault <- france_deaths %>% 
+  filter(ICD10== "Assault", SEX != "Total")
+
+women_france<-france_deaths %>% 
+  filter(SEX== "Females")
+
+ggplot(data= assault, mapping=aes(x=TIME, y=Value, color= SEX))+
+  geom_line()+
+  labs(title= "Assault in France")
+```
+
+```{r}
+## Suicide (http://apps.who.int/gho/data/node.main.MHSUICIDEASDR?lang=en)
+
+suicide_rates_per100000<-MH_12 %>% 
+  rename(country= X1, sex= X2, rate_2016 ="Age-standardized suicide rates (per 100 000 population)", rate_2015 = "Age-standardized suicide rates (per 100 000 population)_1", rate_2010 = "Age-standardized suicide rates (per 100 000 population)_2", rate_2000 = "Age-standardized suicide rates (per 100 000 population)_3" ) 
+
+suicide_rates_per100000 = suicide_rates_per100000[-1,]
+
+tidy_suicide_rates_per100000 <- suicide_rates_per100000 %>% 
+  pivot_longer(names_to = "year", 
+               values_to = "rate", 
+               cols = c(rate_2000, rate_2010, rate_2015, rate_2016))
+
+gapminder <- gapminder %>% 
+filter( year==2002)
+       
+suicide_with_continent <- tidy_suicide_rates_per100000 %>% 
+  left_join(gapminder, by= "country") %>% 
+  rename(year = year.x)
+
+suicide_males <- suicide_with_continent %>% 
+  filter(sex=="Male")
+
+suicide_females <- suicide_with_continent %>% 
+  filter(sex=="Female")
+
+suicide_both <- suicide_with_continent %>% 
+  filter(sex=="Both sexes")
+
+suicide_2000 <- suicide_with_continent %>% 
+  filter(year=="rate_2000")
+
+suicide_2010 <- suicide_with_continent %>% 
+  filter(year== "rate_2010")
+
+suicide_2015 <- suicide_with_continent %>% 
+  filter(year== "rate_2015")
+
+suicide_2016 <- suicide_with_continent %>% 
+  filter(year== "rate_2016")
+```
+
+
+
+```{}
+ggplot(data= suicide_with_continent, mapping= aes(x=gdpPercap, y= rate, color=continent))+
+  geom_point()+
+  facet_wrap(~year) 
+
+ggplot(data= suicide_2000, mapping= aes(x=gdpPercap, y= rate, color=continent ))+
+geom_point()+
+facet_wrap(~sex)
+  
+```
+
+
+

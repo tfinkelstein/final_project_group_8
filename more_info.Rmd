@@ -1,0 +1,30 @@
+---
+title: "More information"
+author: "Guy Incognito"
+date: "Last updated on `r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: kable
+---
+
+<!--
+Comments in HTML are like this! 
+-->
+
+# SECTION NAME
+
+Write your "more information" section here.
+
+## Subsection name
+
+Write a second `more_info.html` page going more in-depth for people who want more details. In should have
+
+1. Between 2-3 more visualizations.
+1. No more than 500 words of text
+
+```{r, echo = FALSE}
+
+```

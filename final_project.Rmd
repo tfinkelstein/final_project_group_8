@@ -9,33 +9,12 @@ output: html_document
 library(tidyverse)
 library(gapminder)
 
-library(readr)
-CausesOfDeath_France_2001_2008 <- read_csv("CausesOfDeath_France_2001-2008.csv", 
-    col_types = cols(Value = col_character()))
 
 library(readr)
 MH_12 <- read_csv("MH_12.csv", col_types = cols(`Age-standardized suicide rates (per 100 000 population)` = col_number(), 
     `Age-standardized suicide rates (per 100 000 population)_1` = col_number(), 
     `Age-standardized suicide rates (per 100 000 population)_2` = col_number(), 
     `Age-standardized suicide rates (per 100 000 population)_3` = col_number()))
-```
-
-```{r}
-## France Deaths
-france_deaths<-CausesOfDeath_France_2001_2008 %>% 
- mutate(Value =str_replace_all(Value, " ", "")) %>% 
-  mutate(Value = as.numeric(Value)) %>% 
-  filter(ICD10!= "All causes of death (A00-Y89) excluding S00-T98")
-
-assault <- france_deaths %>% 
-  filter(ICD10== "Assault", SEX != "Total")
-
-women_france<-france_deaths %>% 
-  filter(SEX== "Females")
-
-ggplot(data= assault, mapping=aes(x=TIME, y=Value, color= SEX))+
-  geom_line()+
-  labs(title= "Assault in France")
 ```
 
 ```{r}

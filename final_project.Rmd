@@ -21,21 +21,26 @@ MH_12 <- read_csv("MH_12.csv", col_types = cols(`Age-standardized suicide rates 
 ## Suicide (http://apps.who.int/gho/data/node.main.MHSUICIDEASDR?lang=en)
 
 suicide_rates_per100000<-MH_12 %>% 
-  rename(country= X1, sex= X2, rate_2016 ="Age-standardized suicide rates (per 100 000 population)", rate_2015 = "Age-standardized suicide rates (per 100 000 population)_1", rate_2010 = "Age-standardized suicide rates (per 100 000 population)_2", rate_2000 = "Age-standardized suicide rates (per 100 000 population)_3" ) 
+  rename(country= X1, sex= X2, "2016" ="Age-standardized suicide rates (per 100 000 population)", "2015" = "Age-standardized suicide rates (per 100 000 population)_1", "2010" = "Age-standardized suicide rates (per 100 000 population)_2", "2000" = "Age-standardized suicide rates (per 100 000 population)_3" ) 
 
 suicide_rates_per100000 = suicide_rates_per100000[-1,]
 
 tidy_suicide_rates_per100000 <- suicide_rates_per100000 %>% 
   pivot_longer(names_to = "year", 
                values_to = "rate", 
-               cols = c(rate_2000, rate_2010, rate_2015, rate_2016))
+               cols = c("2000", "2010", "2015", 
+                        "2016"))
 
-gapminder <- gapminder %>% 
-filter( year==2002)
-       
-suicide_with_continent <- tidy_suicide_rates_per100000 %>% 
-  left_join(gapminder, by= "country") %>% 
-  rename(year = year.x)
+## GDP (http://data.un.org/Data.aspx?d=SNAAMA&f=grID%3A101%3BcurrID%3AUSD%3BpcFlag%3A1)
+UN_data<-UNdata_Export_20191209_200452883 %>% 
+  rename(country = "Country or Area", year = "Year")
+
+GDP_suicide <- tidy_suicide_rates_per100000 %>% 
+  full_join(UN_data, by=c("year", "country"))
+  
+  ```
+  
+  ```{r}
 
 suicide_males <- suicide_with_continent %>% 
   filter(sex=="Male")
@@ -61,7 +66,7 @@ suicide_2016 <- suicide_with_continent %>%
 
 
 
-```{}
+```{r}
 ggplot(data= suicide_with_continent, mapping= aes(x=gdpPercap, y= rate, color=continent))+
   geom_point()+
   facet_wrap(~year) 

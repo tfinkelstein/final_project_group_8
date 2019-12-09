@@ -1,7 +1,7 @@
 ---
-title: "Final_project"
-author: "Naomi Giancola"
-date: "11/25/2019"
+title: "Final Project"
+author: "Naomi Giancola, Christina Sherpa & Tessa Finkelstein"
+date: "12/20/2019"
 output: html_document
 ---
 

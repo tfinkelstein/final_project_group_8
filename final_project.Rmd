@@ -9,7 +9,10 @@ output: html_document
 library(tidyverse)
 library(gapminder)
 
-
+library(readr)
+UNdata_Export_20191209_200452883 <- read_csv("UNdata_Export_20191209_200452883.csv", 
+    col_types = cols(Year = col_character()))
+    
 library(readr)
 MH_12 <- read_csv("MH_12.csv", col_types = cols(`Age-standardized suicide rates (per 100 000 population)` = col_number(), 
     `Age-standardized suicide rates (per 100 000 population)_1` = col_number(), 

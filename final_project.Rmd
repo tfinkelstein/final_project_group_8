@@ -86,18 +86,6 @@ suicide_2016 <- GDP_suicide %>%
 ```
 
 
-
-```{r}
-ggplot(data= suicide_with_continent, mapping= aes(x=gdpPercap, y= rate, color=continent))+
-  geom_point()+
-  facet_wrap(~year) 
-
-ggplot(data= suicide_2000, mapping= aes(x=gdpPercap, y= rate, color=continent ))+
-geom_point()+
-facet_wrap(~sex)
-  
-```
-
 ```{r}
 country_locations<-read_csv("https://github.com/albertyw/avenews/raw/master/old/data/average-latitude-longitude-countries.csv")
 

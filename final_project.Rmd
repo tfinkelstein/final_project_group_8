@@ -92,49 +92,17 @@ suicide_2016 <- GDP_suicide %>%
   filter(year== "2016")
 ```
 
-
 ```{r}
-country_locations<-read_csv("https://github.com/albertyw/avenews/raw/master/old/data/average-latitude-longitude-countries.csv")
+  geom_line(aes(color=country))+
+  labs(x="Year", y="Suicides per 100,000 People", color= "Country", title= "Suicides per 100,000 People in USA and India")
 
-View(country_locations)
+ggplot(data= GDP_suicide, mapping= aes(x=year, y= Value, group=country))+
+  geom_line(aes(color=country))+
+  labs(x="Year", y="GDP per Capita", color= "Country", title= "GDP per Capita in USA and India")
 
-#join country_locations which has long and lat with tidy_suicide_rates_per100000
-
-tidy_suicide_rates_per100000_locations <- tidy_suicide_rates_per100000 %>% 
-  inner_join(country_locations, by = c("country" = "Country"))
-
-tidy_suicide_rates_per100000_locations %>% 
-  filter(year == "rate_2016" & sex == "Both sexes")
-
-pal <- colorNumeric(
-  palette = "Blues",
-  domain = tidy_suicide_rates_per100000_locations$rate
-)
- 
-leaflet(data = tidy_suicide_rates_per100000_locations) %>%
-  addTiles() %>% 
-  addMarkers(lat = ~Latitude, lng = ~Longitude , popup = ~country) %>% 
-  addPolygons(data = tidy_suicide_rates_per100000_locations$rate,
-  fillColor = ~pal(rate),
-  weight = 2,
-  opacity = 1,
-  color = "black",
-  fillOpacity = 0.7)
-
-for_polygons<-world_map_sf %>% 
-  inner_join(tidy_suicide_rates_per100000_locations, by = c("ID" = "country"))
-#this party does not work yet sadly
-for_polygons <- map(database = "world", plot = FALSE, fill = TRUE) %>% 
-  st_as_sf(crs = 4326)
-ggplot() +
-  geom_sf(data = for_polygons) +
-  theme_bw()+
-  addPolygons(data = for_polygons,
-  fillColor = ~pal(for_polygons$rate),
-  weight = 2,
-  opacity = 1,
-  color = "black",
-  fillOpacity = 0.7)
-  
-  ```
+ggplot(data= suicide_not_both, mapping= aes(x=year, y= rate, group=sex))+
+  geom_line(aes(color=sex))+
+  facet_wrap(~country)+
+  labs(x="Year", y="Suicides per 100,000 People", color= "Sex", title= "Suicides per 100,000 People in USA and India by Sex")
+```
 

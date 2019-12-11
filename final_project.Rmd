@@ -57,9 +57,16 @@ UN_data<-UNdata_Export_20191209_200452883 %>%
   rename(country = "Country or Area", year = "Year") %>% 
   mutate(country =str_replace_all(country, "United States", "United States of America"))
   
-GDP_suicide <- tidy_suicide_rates_per100000 %>% 
+GDP_suicide_India <- tidy_suicide_rates_per100000 %>% 
   full_join(UN_data, by=c("year", "country"))%>% 
-  filter(country==c("India", "United States of America"))
+  filter(country==c("India"))
+
+GDP_suicide_America <- tidy_suicide_rates_per100000 %>% 
+  full_join(UN_data, by=c("year", "country"))%>% 
+  filter(country==c("United States of America"))
+
+GDP_suicide <- GDP_suicide_America %>% 
+  full_join(GDP_suicide_India)
 ```
 
 ```{r}

@@ -50,21 +50,16 @@ tidy_suicide_rates_per100000 <- suicide_rates_per100000 %>%
   pivot_longer(names_to = "year", 
                values_to = "rate", 
                cols = c("2000", "2010", "2015", 
-                        "2016"))%>% 
-  mutate(country =str_replace_all(country, "Russia", "	Russian Federation"))
+                        "2016"))
 
 ## GDP (http://data.un.org/Data.aspx?d=SNAAMA&f=grID%3A101%3BcurrID%3AUSD%3BpcFlag%3A1)
 UN_data<-UNdata_Export_20191209_200452883 %>% 
   rename(country = "Country or Area", year = "Year") %>% 
-  mutate(country =str_replace_all(country, "United States", "United States of America")) %>% 
-  mutate(country =str_replace_all(country, "China", "China, People's Republic of"))%>%
-  mutate(country =str_replace_all(country, "Russia", "	Russian Federation")) 
+  mutate(country =str_replace_all(country, "United States", "United States of America"))
   
-  
-
 GDP_suicide <- tidy_suicide_rates_per100000 %>% 
   full_join(UN_data, by=c("year", "country"))%>% 
-  mutate(country =str_replace_all(country, "Russia", "	Russian Federation"))
+  filter(country==c("India", "United States of America"))
 ```
 
 ```{r}

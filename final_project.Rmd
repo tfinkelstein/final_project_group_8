@@ -1,9 +1,27 @@
 ---
 title: "Final Project"
 author: "Naomi Giancola, Christina Sherpa & Tessa Finkelstein"
-date: "12/20/2019"
-output: html_document
+date: "December 20, 2019"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: kable
 ---
+
+<!--
+Comments in HTML are like this! 
+-->
+
+# SECTION NAME
+
+## Subsection name
+
+Write an intro `index.html` page in blog-post style that summarizes your work. It should have
+
+1. One visualization that best summarizes your work.
+1. No more than 200 words of text
 
 ```{r setup, include=FALSE}
 library(tidyverse)
@@ -40,10 +58,6 @@ UN_data<-UNdata_Export_20191209_200452883 %>%
 
 GDP_suicide <- tidy_suicide_rates_per100000 %>% 
   full_join(UN_data, by=c("year", "country"))
-  
-  ```
-  
-  ```{r}
 
 suicide_males <- suicide_with_continent %>% 
   filter(sex=="Male")

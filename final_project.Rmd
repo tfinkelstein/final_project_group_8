@@ -26,12 +26,12 @@ Write an intro `index.html` page in blog-post style that summarizes your work. I
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(gapminder)
+library(readr)
 
 library(readr)
 UNdata_Export_20191209_200452883 <- read_csv("UNdata_Export_20191209_200452883.csv", 
     col_types = cols(Year = col_character()))
-    
-library(readr)
+
 MH_12 <- read_csv("MH_12.csv", col_types = cols(`Age-standardized suicide rates (per 100 000 population)` = col_number(), 
     `Age-standardized suicide rates (per 100 000 population)_1` = col_number(), 
     `Age-standardized suicide rates (per 100 000 population)_2` = col_number(), 
@@ -50,34 +50,43 @@ tidy_suicide_rates_per100000 <- suicide_rates_per100000 %>%
   pivot_longer(names_to = "year", 
                values_to = "rate", 
                cols = c("2000", "2010", "2015", 
-                        "2016"))
+                        "2016"))%>% 
+  mutate(country =str_replace_all(country, "Russia", "	Russian Federation"))
 
 ## GDP (http://data.un.org/Data.aspx?d=SNAAMA&f=grID%3A101%3BcurrID%3AUSD%3BpcFlag%3A1)
 UN_data<-UNdata_Export_20191209_200452883 %>% 
-  rename(country = "Country or Area", year = "Year")
+  rename(country = "Country or Area", year = "Year") %>% 
+  mutate(country =str_replace_all(country, "United States", "United States of America")) %>% 
+  mutate(country =str_replace_all(country, "China", "China, People's Republic of"))%>%
+  mutate(country =str_replace_all(country, "Russia", "	Russian Federation")) 
+  
+  
 
 GDP_suicide <- tidy_suicide_rates_per100000 %>% 
-  full_join(UN_data, by=c("year", "country"))
+  full_join(UN_data, by=c("year", "country"))%>% 
+  mutate(country =str_replace_all(country, "Russia", "	Russian Federation"))
+```
 
-suicide_males <- suicide_with_continent %>% 
+```{r}
+suicide_males <- GDP_suicide %>% 
   filter(sex=="Male")
 
-suicide_females <- suicide_with_continent %>% 
+suicide_females <- GDP_suicide %>% 
   filter(sex=="Female")
 
-suicide_both <- suicide_with_continent %>% 
+suicide_both <- GDP_suicide %>% 
   filter(sex=="Both sexes")
 
-suicide_2000 <- suicide_with_continent %>% 
+suicide_2000 <- GDP_suicide %>% 
   filter(year=="rate_2000")
 
-suicide_2010 <- suicide_with_continent %>% 
+suicide_2010 <- GDP_suicide %>% 
   filter(year== "rate_2010")
 
-suicide_2015 <- suicide_with_continent %>% 
+suicide_2015 <- GDP_suicide %>% 
   filter(year== "rate_2015")
 
-suicide_2016 <- suicide_with_continent %>% 
+suicide_2016 <- GDP_suicide %>% 
   filter(year== "rate_2016")
 ```
 

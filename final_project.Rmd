@@ -78,16 +78,16 @@ suicide_both <- GDP_suicide %>%
   filter(sex=="Both sexes")
 
 suicide_2000 <- GDP_suicide %>% 
-  filter(year=="rate_2000")
+  filter(year=="2000")
 
 suicide_2010 <- GDP_suicide %>% 
-  filter(year== "rate_2010")
+  filter(year== "2010")
 
 suicide_2015 <- GDP_suicide %>% 
-  filter(year== "rate_2015")
+  filter(year== "2015")
 
 suicide_2016 <- GDP_suicide %>% 
-  filter(year== "rate_2016")
+  filter(year== "2016")
 ```
 
 

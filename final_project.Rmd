@@ -28,8 +28,16 @@ library(tidyverse)
 library(readr)
 library(leaflet)
 
-library(readr)
 Suicide_Mortality_by_State <- read_csv("Suicide Mortality by State.csv")
+
+region <- read_csv("region.csv")
+```
+
+```{r}
+region_suicide <- region %>% 
+  rename(STATE= "State Code") %>% 
+  full_join(Suicide_Mortality_by_State, by="STATE") %>% 
+  filter(YEAR!= "2005")
 ```
 ```{r}
 not_2005 <- Suicide_Mortality_by_State %>% 
@@ -38,6 +46,18 @@ ggplot(data=not_2005, mapping=aes(group= YEAR, x=YEAR, y=RATE))+
   geom_boxplot()+
   labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People")+
   scale_x_continuous( breaks=seq(2014,2017,1))
+<<<<<<< HEAD
+=======
+
+ggplot(data=region_suicide, mapping=aes(x=YEAR, y=RATE, group= YEAR))+
+  geom_boxplot()+
+  scale_x_continuous( breaks=seq(2014,2017,1))+
+  facet_wrap(~Region)
+  ```
+  
+  
+ ```{r}
+>>>>>>> 2d1a205b147db3bc38b488631a1ccf70686fd0e0
  #wrangling income
 income<-kaggle_income %>% 
   select(Median,State_Name) %>% 

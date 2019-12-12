@@ -56,13 +56,56 @@ income<-kaggle_income %>%
   filter(!State_Name == "Puerto Rico", !State_Name == "District of Columbia") %>% 
   group_by(State_Name) %>%  
   summarize(median_income = median(Median))
+
 View(income)
  #wrangling location
 location <-statelatlong_1_ %>% 
   filter(!City == "Puerto Rico", !City == "District of Columbia") 
+
 View(location)
+
 #combining location and income
 income_location <- income %>% 
   full_join(location, by = c("State_Name" = "City" )) 
+
 View(income_location)
+
+#experimenting with maps
+leaflet(data = income_location) %>%
+  addTiles() %>% 
+  # We need to map the lng, lat variables in clinton_stops_df
+  addMarkers(lng = ~Longitude, lat = ~Latitude)
+
+#filter suicide to only have data from 2017 
+suicide_2017<-Suicide %>% 
+  filter(YEAR == "2017") %>% 
+ 
+View(suicide_2017)
+
+
+#combining Suicide w/ income and location
+suicide_income_location<-income_location %>% 
+  full_join(suicide_2017, by= c("State" = "STATE")) %>% 
+  mutate(State_Name = toupper(State_Name))
+
+View(suicide_income_location)
+
+
+# Load maps package map object of US states and plot using default R plot
+# function (not ggplot2). Plot is not pretty!
+USA_map <-  maps::map("state", plot = FALSE, fill = TRUE)
+plot(USA_map)
+
+# Convert maps package map object to sf object using st_as_sf() again:
+USA_sf <- USA_map %>% 
+  sf::st_as_sf(crs = 4326) %>% 
+  filter(!ID == "district of columbia") %>% 
+  mutate(ID = toupper(ID))
+  
+#join usa_sf with suicide_income-location to get geom for map 
+map_data<-suicide_income_location %>% 
+  full_join(USA_sf, by = c("State_Name" = "ID"))
+  
+View(map_data)
+
 ```

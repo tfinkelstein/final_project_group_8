@@ -1,3 +1,29 @@
+---
+title: "My Final Project"
+author: "Guy Incognito"
+date: "Last updated on `r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: kable
+---
+
+<!--
+Comments in HTML are like this! 
+-->
+
+# SECTION NAME
+
+## Subsection name
+
+Write an intro `index.html` page in blog-post style that summarizes your work. It should have
+
+1. One visualization that best summarizes your work.
+1. No more than 200 words of text
+
+```{r, echo = FALSE}
 library(tidyverse)
 library(readr)
 library(leaflet)
@@ -5,36 +31,29 @@ library(leaflet)
 library(readr)
 Suicide_Mortality_by_State <- read_csv("Suicide Mortality by State.csv")
 ```
-
 ```{r}
 not_2005 <- Suicide_Mortality_by_State %>% 
   filter(YEAR!= "2005")
-
 ggplot(data=not_2005, mapping=aes(group= YEAR, x=YEAR, y=RATE))+
   geom_boxplot()+
   labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People")+
   scale_x_continuous( breaks=seq(2014,2017,1))
-  ```
-  
-  
- ```{r}
  #wrangling income
 income<-kaggle_income %>% 
   select(Median,State_Name) %>% 
   filter(!State_Name == "Puerto Rico", !State_Name == "District of Columbia") %>% 
   group_by(State_Name) %>%  
   summarize(median_income = median(Median))
-
 View(income)
  #wrangling location
 location <-statelatlong_1_ %>% 
   filter(!City == "Puerto Rico", !City == "District of Columbia") 
-
 View(location)
-
 #combining location and income
 income_location <- income %>% 
   full_join(location, by = c("State_Name" = "City" )) 
-
 View(income_location)
 ```
+
+
+

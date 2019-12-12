@@ -37,17 +37,20 @@ region_suicide <- region %>%
   full_join(Suicide_Mortality_by_State, by="STATE") %>% 
   filter(YEAR!= "2005")
 
-not_2005 <- Suicide_Mortality_by_State %>% 
-  filter(YEAR!= "2005")
 ggplot(data=not_2005, mapping=aes(group= YEAR, x=YEAR, y=RATE))+
   geom_boxplot()+
   labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People")+
   scale_x_continuous( breaks=seq(2014,2017,1))
 
-ggplot(data=region_suicide, mapping=aes(x=YEAR, y=RATE, group= YEAR))+
+ggplot(data=region_suicide, mapping=aes(x=YEAR, y=RATE, group= YEAR, fill=Region))+
   geom_boxplot()+
   scale_x_continuous( breaks=seq(2014,2017,1))+
-  facet_wrap(~Region)
+  facet_wrap(~Region)+
+  labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People Split by Region")
+
+ggplot(data=region_suicide, mapping=aes(x=YEAR, y=RATE, fill=Division))+
+  geom_col(position = "dodge")+
+  labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People Split by Division")
   
   
  #wrangling income

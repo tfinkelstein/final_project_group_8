@@ -5,7 +5,15 @@ library(leaflet)
 library(readr)
 Suicide_Mortality_by_State <- read_csv("Suicide Mortality by State.csv")
 ```
+region <- read_csv("region.csv")
+```
 
+```{r}
+region_suicide <- region %>% 
+  rename(STATE= "State Code") %>% 
+  full_join(Suicide_Mortality_by_State, by="STATE")
+ ```
+ 
 ```{r}
 not_2005 <- Suicide_Mortality_by_State %>% 
   filter(YEAR!= "2005")

@@ -115,7 +115,7 @@ ggplot(data=region_suicide, mapping=aes(x=YEAR, y=RATE, group= YEAR))+
 ggplot(data = region_suicide, mapping = aes(x = RATE, y = DEATHS)) +
   geom_point(aes(color = Region)) +
   facet_wrap(~YEAR) +
-  labs(x= "Rate", y= "Year", title= "Suicide Attempt Rates vs. Actual Deaths (by Region)") +
+  labs(x= "Rate", y= "Deaths", title= "Suicide Attempt Rates vs. Actual Deaths (by Region)") +
   scale_color_manual(values = c("#f1eef6", "#bdc9e1", "#74a9cf", "#0570b0")) +
   theme_dark()
 
@@ -124,92 +124,4 @@ ggplot(data=region_suicide, mapping=aes(x=YEAR, y=RATE, fill=Division))+
   labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People (by Division)")+
   scale_fill_manual(values = c("#fff7fb", "#ece7f2", "#d0d1e6", "#a6bddb", "#74a9cf", "#3690c0", "#0570b0", "#045a8d", "#023858"))+
   theme_dark()
-```
-
-# EXTRA STUFF
- 
- # top/bottom 5 states with high/low rates
-region_suicide_top5_bottom5 <- region_suicide %>%
-  filter(STATE %in% c("ID","NM","WY","AK","MT","NY","NJ","MA","MD","CA","CT"))
-
-# top 2017
-region_suicide_top5_2017 <- region_suicide %>%
-  filter(YEAR == "2017") %>%
-  arrange(RATE) %>%
-  top_n(5, RATE)
-# bottom 2017
-region_suicide_bottom5_2017 <- region_suicide %>%
-  filter(YEAR == "2017") %>%
-  arrange(RATE) %>%
-  top_n(-5, RATE)
-
-# Tessa makes some graphs
-
-ggplot(data = region_suicide, mapping = aes(x = RATE, y = DEATHS)) +
-  geom_point(aes(color = Region)) +
-  facet_wrap(~YEAR) +
-  labs(x= "Rate", y= "Year", title= "Suicide Attempt Rates vs. Actual Deaths (by Region)") +
-  scale_color_manual(values = c("#f1eef6", "#bdc9e1", "#74a9cf", "#0570b0")) +
-  theme_dark()
- 
- EVERYTHING BELOW IS CHRISTINA'S MAP DATA (INCOME)
- 
- #wrangling income
-income<-kaggle_income %>% 
-  select(Median,State_Name) %>% 
-  filter(!State_Name == "Puerto Rico", !State_Name == "District of Columbia") %>% 
-  group_by(State_Name) %>%  
-  summarize(median_income = median(Median))
-
-View(income)
- #wrangling location
-location <-statelatlong_1_ %>% 
-  filter(!City == "Puerto Rico", !City == "District of Columbia") 
-
-View(location)
-
-#combining location and income
-income_location <- income %>% 
-  full_join(location, by = c("State_Name" = "City" )) 
-
-View(income_location)
-
-#experimenting with maps
-leaflet(data = income_location) %>%
-  addTiles() %>% 
-  # We need to map the lng, lat variables in clinton_stops_df
-  addMarkers(lng = ~Longitude, lat = ~Latitude)
-
-#filter suicide to only have data from 2017 
-suicide_2017<-Suicide %>% 
-  filter(YEAR == "2017") %>% 
- 
-View(suicide_2017)
-
-
-#combining Suicide w/ income and location
-suicide_income_location<-income_location %>% 
-  full_join(suicide_2017, by= c("State" = "STATE")) %>% 
-  mutate(State_Name = toupper(State_Name))
-
-View(suicide_income_location)
-
-
-# Load maps package map object of US states and plot using default R plot
-# function (not ggplot2). Plot is not pretty!
-USA_map <-  maps::map("state", plot = FALSE, fill = TRUE)
-plot(USA_map)
-
-# Convert maps package map object to sf object using st_as_sf() again:
-USA_sf <- USA_map %>% 
-  sf::st_as_sf(crs = 4326) %>% 
-  filter(!ID == "district of columbia") %>% 
-  mutate(ID = toupper(ID))
-  
-#join usa_sf with suicide_income-location to get geom for map 
-map_data<-suicide_income_location %>% 
-  full_join(USA_sf, by = c("State_Name" = "ID"))
-  
-View(map_data)
-
 ```

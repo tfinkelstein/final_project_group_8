@@ -1,6 +1,8 @@
+# FIRST PAGE
+
 ---
-title: "My Final Project"
-author: "Guy Incognito"
+title: "Suicide Rates in the United States (2014-2017)"
+author: "Naomi Giancola, Christina Sherpa, Tessa Finkelstein"
 date: "Last updated on `r Sys.Date()`"
 output:
   html_document:
@@ -14,24 +16,30 @@ output:
 Comments in HTML are like this! 
 -->
 
-# SECTION NAME
-
-## Subsection name
+# Suicide Deaths per 100,000 People
 
 Write an intro `index.html` page in blog-post style that summarizes your work. It should have
 
 1. One visualization that best summarizes your work.
 1. No more than 200 words of text
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(readr)
 library(leaflet)
+
+MH_12 <- read_csv("MH_12.csv")
 
 Suicide_Mortality_by_State <- read_csv("Suicide Mortality by State.csv")
 
 region <- read_csv("region.csv")
 
+kaggle_income <- read_csv("kaggle_income.csv")
+
+statelatlong_1_ <- read_csv("statelatlong (1).csv")
+```
+
+```{r, echo=FALSE}
 not_2005 <- Suicide_Mortality_by_State %>% 
   filter(YEAR!= "2005")
 
@@ -39,27 +47,84 @@ region_suicide <- region %>%
   rename(STATE= "State Code") %>% 
   full_join(Suicide_Mortality_by_State, by="STATE") %>% 
   filter(YEAR!= "2005")
-  
-## Naomi made some graphs
 
 ggplot(data=not_2005, mapping=aes(group= YEAR, x=YEAR, y=RATE))+
   geom_boxplot()+
-  labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People in the United   States by Year")+
+  labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People in the United States by Year")+
   scale_x_continuous( breaks=seq(2014,2017,1))+
   theme_dark()
+  ```
   
-  ggplot(data=region_suicide, mapping=aes(x=YEAR, y=RATE, group= YEAR))+
+# SECOND PAGE
+
+---
+title: "More information"
+author: "Naomi Giancola, Christina Sherpa, Tessa Finkelstein"
+date: "Last updated on `r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    df_print: kable
+---
+
+<!--
+Comments in HTML are like this! 
+-->
+
+# Suicide by Region in the United States
+
+Write a second `more_info.html` page going more in-depth for people who want more details. In should have
+
+1. Between 2-3 more visualizations.
+1. No more than 500 words of text
+
+```{r, echo = FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(readr)
+library(leaflet)
+MH_12 <- read_csv("MH_12.csv")
+
+Suicide_Mortality_by_State <- read_csv("Suicide Mortality by State.csv")
+
+region <- read_csv("region.csv")
+
+kaggle_income <- read_csv("kaggle_income.csv")
+
+statelatlong_1_ <- read_csv("statelatlong (1).csv")
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+not_2005 <- Suicide_Mortality_by_State %>% 
+  filter(YEAR!= "2005")
+
+region_suicide <- region %>% 
+  rename(STATE= "State Code") %>% 
+  full_join(Suicide_Mortality_by_State, by="STATE") %>% 
+  filter(YEAR!= "2005")
+```
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(data=region_suicide, mapping=aes(x=YEAR, y=RATE, group= YEAR))+
   geom_boxplot()+
   scale_x_continuous( breaks=seq(2014,2017,1))+
   facet_wrap(~Region)+
-  labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People Split by   Region")+
+  labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People by Region")+
   theme_dark()
 
 ggplot(data=region_suicide, mapping=aes(x=YEAR, y=RATE, fill=Division))+
   geom_col(position = "dodge")+
-  labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People Split by Division")+
+  labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People by Division")+
   scale_fill_manual(values = c("#fff7fb", "#ece7f2", "#d0d1e6", "#a6bddb", "#74a9cf", "#3690c0", "#0570b0", "#045a8d", "#023858"))+
   theme_dark()
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(data = region_suicide, mapping = aes(x = RATE, y = DEATHS)) +
+  geom_point(aes(color = Region))
+```
+
+EXTRA STUFF
  
  # top/bottom 5 states with high/low rates
 region_suicide_top5_bottom5 <- region_suicide %>%

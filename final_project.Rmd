@@ -32,25 +32,33 @@ Suicide_Mortality_by_State <- read_csv("Suicide Mortality by State.csv")
 
 region <- read_csv("region.csv")
 
+not_2005 <- Suicide_Mortality_by_State %>% 
+  filter(YEAR!= "2005")
+
 region_suicide <- region %>% 
   rename(STATE= "State Code") %>% 
   full_join(Suicide_Mortality_by_State, by="STATE") %>% 
   filter(YEAR!= "2005")
+  
+## Naomi made some graphs
 
 ggplot(data=not_2005, mapping=aes(group= YEAR, x=YEAR, y=RATE))+
   geom_boxplot()+
-  labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People")+
+  labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People in the United   States by Year")+
   scale_x_continuous( breaks=seq(2014,2017,1))
-
-ggplot(data=region_suicide, mapping=aes(x=YEAR, y=RATE, group= YEAR, fill=Region))+
+  
+  ggplot(data=region_suicide, mapping=aes(x=YEAR, y=RATE, group= YEAR))+
   geom_boxplot()+
   scale_x_continuous( breaks=seq(2014,2017,1))+
   facet_wrap(~Region)+
-  labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People Split by Region")
+  labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People Split by   Region")+
+  theme_dark()
 
 ggplot(data=region_suicide, mapping=aes(x=YEAR, y=RATE, fill=Division))+
   geom_col(position = "dodge")+
-  labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People Split by Division")
+  labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People Split by Division")+
+  scale_fill_manual(values = c("#fff7fb", "#ece7f2", "#d0d1e6", "#a6bddb", "#74a9cf", "#3690c0", "#0570b0", "#045a8d", "#023858"))+
+  theme_dark()
  
  # top/bottom 5 states with high/low rates
 region_suicide_top5_bottom5 <- region_suicide %>%

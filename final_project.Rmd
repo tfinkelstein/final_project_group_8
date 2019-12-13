@@ -124,7 +124,7 @@ ggplot(data = region_suicide, mapping = aes(x = RATE, y = DEATHS)) +
   geom_point(aes(color = Region))
 ```
 
-EXTRA STUFF
+# EXTRA STUFF
  
  # top/bottom 5 states with high/low rates
 region_suicide_top5_bottom5 <- region_suicide %>%

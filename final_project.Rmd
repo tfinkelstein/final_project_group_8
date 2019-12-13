@@ -77,16 +77,9 @@ region_suicide_bottom5_2017 <- region_suicide %>%
 
 # Tessa makes some graphs
 
-ggplot(data = region_suicide, mapping = aes(x = YEAR, y = RATE, group = STATE))+
-  geom_line(aes(color = STATE)) +
-  facet_wrap(~Region)
-
-ggplot(data = region_suicide_top5_bottom5, mapping = aes(x = YEAR, y = RATE, group = STATE))+
-  geom_line(aes(color = STATE))
-
 ggplot(data = region_suicide, mapping = aes(x = RATE, y = DEATHS)) +
-  geom_point(aes(color = Region))
- 
+  geom_point(aes(color = Region)) +
+  facet_wrap(~YEAR)
  
  EVERYTHING BELOW IS CHRISTINA'S MAP DATA (INCOME)
  

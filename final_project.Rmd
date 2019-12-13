@@ -145,7 +145,10 @@ region_suicide_bottom5_2017 <- region_suicide %>%
 
 ggplot(data = region_suicide, mapping = aes(x = RATE, y = DEATHS)) +
   geom_point(aes(color = Region)) +
-  facet_wrap(~YEAR)
+  facet_wrap(~YEAR) +
+  labs(x= "Rate", y= "Year", title= "Suicide Attempt Rates vs. Actual Deaths (by Region)") +
+  scale_color_manual(values = c("#f1eef6", "#bdc9e1", "#74a9cf", "#0570b0")) +
+  theme_dark()
  
  EVERYTHING BELOW IS CHRISTINA'S MAP DATA (INCOME)
  

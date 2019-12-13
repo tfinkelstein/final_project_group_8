@@ -51,8 +51,37 @@ ggplot(data=region_suicide, mapping=aes(x=YEAR, y=RATE, group= YEAR, fill=Region
 ggplot(data=region_suicide, mapping=aes(x=YEAR, y=RATE, fill=Division))+
   geom_col(position = "dodge")+
   labs(x= "Year", y= "Rate", title= "Suicide Deaths per 100,000 People Split by Division")
-  
-  
+ 
+ # top/bottom 5 states with high/low rates
+region_suicide_top5_bottom5 <- region_suicide %>%
+  filter(STATE %in% c("ID","NM","WY","AK","MT","NY","NJ","MA","MD","CA","CT"))
+
+# top 2017
+region_suicide_top5_2017 <- region_suicide %>%
+  filter(YEAR == "2017") %>%
+  arrange(RATE) %>%
+  top_n(5, RATE)
+# bottom 2017
+region_suicide_bottom5_2017 <- region_suicide %>%
+  filter(YEAR == "2017") %>%
+  arrange(RATE) %>%
+  top_n(-5, RATE)
+
+# Tessa makes some graphs
+
+ggplot(data = region_suicide, mapping = aes(x = YEAR, y = RATE, group = STATE))+
+  geom_line(aes(color = STATE)) +
+  facet_wrap(~Region)
+
+ggplot(data = region_suicide_top5_bottom5, mapping = aes(x = YEAR, y = RATE, group = STATE))+
+  geom_line(aes(color = STATE))
+
+ggplot(data = region_suicide, mapping = aes(x = RATE, y = DEATHS)) +
+  geom_point(aes(color = Region))
+ 
+ 
+ EVERYTHING BELOW IS CHRISTINA'S MAP DATA (INCOME)
+ 
  #wrangling income
 income<-kaggle_income %>% 
   select(Median,State_Name) %>% 
